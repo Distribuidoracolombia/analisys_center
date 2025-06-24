@@ -1,0 +1,27 @@
+{
+  "name": "power-bi-viewer",
+  "version": "1.0.0",
+  "description": "Visualizador de informes Power BI optimizado para dispositivos móviles y escritorio",
+  "main": "index.html",
+  "scripts": {
+    "start": "python -m http.server",
+    "update-version": "node version.js"
+  },
+  "keywords": [
+    "power-bi",
+    "dashboard",
+    "visualization",
+    "reports"
+  ],
+  "author": "Analysis Center",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/your-username/power-bi-viewer.git"
+  },
+  "bugs": {
+    "url": "https://github.com/your-username/power-bi-viewer/issues"
+  },
+  "homepage": "https://github.com/your-username/power-bi-viewer#readme",
+  "devDependencies": {}
+}
