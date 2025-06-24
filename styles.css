@@ -729,3 +729,37 @@ body {
     border-left-color: #ffb74d;
   }
 }
+/* Botones adicionales */
+#reload-button {
+  bottom: 90px;
+  right: 20px;
+}
+
+#theme-toggle-button {
+  bottom: 160px;
+  right: 20px;
+}
+
+/* Modo oscuro personalizado manual */
+.dark-mode {
+  background-color: #121212;
+  color: #f1f1f1;
+}
+
+.dark-mode .container {
+  background-color: rgba(30, 30, 30, 0.95);
+}
+
+.dark-mode .report-wrapper {
+  background-color: #1e1e1e;
+  border-color: rgba(255, 255, 255, 0.05);
+}
+
+.dark-mode .loader-container {
+  background-color: #1e1e1e;
+}
+
+.dark-mode .help-modal-content {
+  background-color: #1e1e1e;
+  color: #e0e0e0;
+}
