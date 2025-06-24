@@ -16,7 +16,26 @@ document.addEventListener('DOMContentLoaded', function() {
   
   // Detectar si es un dispositivo móvil
   const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-  
+  // Función para recargar solo el iframe
+const reloadButton = document.getElementById('reload-button');
+if (reloadButton && reportFrame) {
+  reloadButton.addEventListener('click', () => {
+    const currentSrc = reportFrame.src;
+    reportFrame.src = currentSrc;
+  });
+}
+
+// Función para cambiar modo claro/oscuro
+const themeToggleButton = document.getElementById('theme-toggle-button');
+if (themeToggleButton) {
+  themeToggleButton.addEventListener('click', () => {
+    document.body.classList.toggle('dark-mode');
+    const icon = themeToggleButton.querySelector('i');
+    icon.classList.toggle('fa-sun');
+    icon.classList.toggle('fa-moon');
+  });
+}
+
   // Añadir clase al body para identificar el tipo de dispositivo
   document.body.classList.add(isMobile ? 'mobile-device' : 'desktop-device');
   
