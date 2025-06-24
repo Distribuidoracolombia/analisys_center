@@ -1,3 +1,4 @@
+
 /**
  * script.js - Funcionalidades para la visualización de informes Power BI
  * Analysis Center - Optimizado para dispositivos móviles y escritorio
@@ -96,6 +97,7 @@ document.addEventListener('DOMContentLoaded', function() {
         errorMessage.innerHTML = `
           <h3>Error al cargar el informe</h3>
           <p>No se pudo cargar el informe de Power BI. Por favor, intente nuevamente más tarde.</p>
+          <p class="warning-text"><strong>Importante:</strong> No borre manualmente la caché o cookies del navegador, ya que esto puede afectar el funcionamiento del informe.</p>
           <button id="retry-button">Reintentar</button>
         `;
         
@@ -167,6 +169,9 @@ document.addEventListener('DOMContentLoaded', function() {
           
           <h4>Problemas comunes</h4>
           <p>Si el informe no carga correctamente, intente recargar la página o contacte con soporte técnico.</p>
+          
+          <h4>Advertencia importante</h4>
+          <p class="warning-text"><strong>No borre manualmente la caché o cookies del navegador</strong>. Esto puede afectar el funcionamiento correcto del informe y su autenticación. Si experimenta problemas, utilice el botón "Reintentar" o contacte con soporte técnico.</p>
         </div>
         <div class="help-modal-footer">
           <button class="primary-button">Entendido</button>

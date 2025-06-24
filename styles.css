@@ -349,6 +349,17 @@ body {
   100% { opacity: 1; }
 }
 
+/* Estilo para mensajes de advertencia */
+.warning-text {
+  color: var(--color-warning);
+  background-color: rgba(253, 126, 20, 0.1);
+  padding: var(--spacing-sm);
+  border-radius: var(--border-radius-sm);
+  margin: var(--spacing-sm) 0;
+  border-left: 3px solid var(--color-warning);
+  font-size: 0.9rem;
+}
+
 /* Media queries para responsividad */
 
 /* Pantallas pequeñas y dispositivos móviles en vertical */
@@ -715,5 +726,11 @@ body {
   
   .help-modal-body h4 {
     color: var(--color-accent);
+  }
+  
+  .warning-text {
+    background-color: rgba(253, 126, 20, 0.2);
+    color: #ffb74d;
+    border-left-color: #ffb74d;
   }
 }
