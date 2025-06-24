@@ -72,20 +72,6 @@
   <!-- Scripts externos -->
 <script src="script.js?v=2.0"></script>
   
-  <!-- Registro del Service Worker -->
-  <script>
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./service-worker.js')
-          .then(registration => {
-            console.log('Service Worker registrado con éxito:', registration.scope);
-          })
-          .catch(error => {
-            console.log('Error al registrar el Service Worker:', error);
-          });
-      });
-    }
-  </script>
     <!-- Botón flotante de recarga -->
 <div class="floating-button" id="reload-button" title="Recargar informe">
   <i class="fas fa-rotate-right"></i>
