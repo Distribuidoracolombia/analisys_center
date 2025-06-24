@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <!-- Metadatos básicos -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Visualización de informes Power BI para análisis de datos">
+  <meta name="author" content="Analysis Center">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  
+  <!-- Título de la página -->
+  <title>Informe Power BI - Analysis Center</title>
+  
+  <!-- Favicon (añadir si está disponible) -->
+  <!-- <link rel="icon" href="favicon.ico" type="image/x-icon"> -->
+  
+  <!-- Fuentes web con preload para optimización -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+  
+  <!-- Estilos CSS externos -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Contenedor principal -->
+  <div class="container">
+    <!-- Encabezado -->
+    <header class="header">
+      <h1>Informe Analisys Center</h1>
+      <p>Panel de control interactivo</p>
+    </header>
+    
+    <!-- Contenedor del informe -->
+    <main class="report-wrapper">
+      <h2 class="sr-only">Visualización del informe</h2>
+      
+      <!-- Loader mientras carga el iframe -->
+      <div id="loader-container" class="loader-container">
+        <div class="loader"></div>
+      </div>
+      
+      <!-- Iframe del informe -->
+      <iframe 
+        id="report-frame"
+        class="report-frame"
+        title="Informe de análisis de datos"
+        src="https://app.powerbi.com/reportEmbed?reportId=0bbbebad-5145-4fd0-87c8-ec217d8b9d09&autoAuth=true&ctid=3db71952-39d8-4055-b125-b23fb14fe0a9"
+        allowFullScreen="true"
+        loading="lazy"
+        aria-label="Informe interactivo de Power BI">
+      </iframe>
+    </main>
+    
+    <!-- Pie de página -->
+    <footer class="footer">
+      <p>&copy; <span id="current-year">2023</span> Analysis Center. Todos los derechos reservados.</p>
+    </footer>
+  </div>
+  
+  <!-- Script para actualizar el año automáticamente -->
+  <script>
+    document.getElementById('current-year').textContent = new Date().getFullYear();
+  </script>
+  
+  <!-- Scripts externos -->
+  <script src="script.js"></script>
+</body>
+</html>
