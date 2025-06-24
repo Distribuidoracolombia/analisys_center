@@ -4,13 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="description" content="Visualizador de informes Power BI optimizado para dispositivos móviles y escritorio">
-    <meta name="theme-color" content="#0078d4">
+    <meta name="theme-color" content="#0d6efd">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>Informe Power BI</title>
+    <meta name="author" content="Analysis Center">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Informe Power BI - Analysis Center</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -18,8 +21,15 @@
   <div class="container">
     <!-- Encabezado -->
     <header class="header">
-      <h1>Informe Analisys Center</h1>
-      <p>Panel de control interactivo</p>
+      <div class="header-content">
+        <div class="logo-area">
+          <i class="fas fa-chart-line logo-icon"></i>
+        </div>
+        <div class="title-area">
+          <h1>Informe Analysis Center</h1>
+          <p>Panel de control interactivo <i class="fas fa-tachometer-alt"></i></p>
+        </div>
+      </div>
     </header>
     
     <!-- Contenedor del informe -->
@@ -45,8 +55,13 @@
     
     <!-- Pie de página -->
     <footer class="footer">
-      <p>&copy; <span id="current-year">2023</span> Analysis Center. Todos los derechos reservados.</p>
+      <p>&copy; <span id="current-year">2023</span> Analysis Center <i class="fas fa-chart-bar"></i> Todos los derechos reservados.</p>
     </footer>
+  </div>
+  
+  <!-- Botón flotante de ayuda -->
+  <div class="floating-button" id="help-button" title="Ayuda">
+    <i class="fas fa-question"></i>
   </div>
   
   <!-- Script para actualizar el año automáticamente -->

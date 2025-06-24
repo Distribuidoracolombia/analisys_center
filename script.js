@@ -1,7 +1,7 @@
 /**
  * script.js - Funcionalidades para la visualización de informes Power BI
- * Analysis Center
- * Optimizado para dispositivos móviles y escritorio
+ * Analysis Center - Optimizado para dispositivos móviles y escritorio
+ * Diseño moderno y experiencia de usuario mejorada
  */
 
 // Esperar a que el DOM esté completamente cargado
@@ -12,9 +12,13 @@ document.addEventListener('DOMContentLoaded', function() {
   const container = document.querySelector('.container');
   const header = document.querySelector('.header');
   const footer = document.querySelector('.footer');
+  const helpButton = document.getElementById('help-button');
   
   // Detectar si es un dispositivo móvil
   const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+  
+  // Añadir clase al body para identificar el tipo de dispositivo
+  document.body.classList.add(isMobile ? 'mobile-device' : 'desktop-device');
   
   // Función para ocultar el loader cuando el iframe ha cargado
   function hideLoader() {
@@ -127,6 +131,93 @@ document.addEventListener('DOMContentLoaded', function() {
         event.stopPropagation();
       }
       lastTap = currentTime;
+    });
+  }
+  
+  // Funcionalidad del botón de ayuda
+  if (helpButton) {
+    helpButton.addEventListener('click', function() {
+      showHelpModal();
+    });
+  }
+  
+  // Función para mostrar el modal de ayuda
+  function showHelpModal() {
+    // Crear el modal de ayuda
+    const modal = document.createElement('div');
+    modal.className = 'help-modal';
+    
+    // Contenido del modal
+    modal.innerHTML = `
+      <div class="help-modal-content">
+        <div class="help-modal-header">
+          <h3><i class="fas fa-question-circle"></i> Ayuda</h3>
+          <button class="close-button"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="help-modal-body">
+          <h4>Navegación del informe</h4>
+          <p>Este visor muestra un informe interactivo de Power BI. Puede interactuar con los gráficos y tablas haciendo clic en ellos.</p>
+          
+          <h4>Consejos de uso</h4>
+          <ul>
+            <li>Haga clic en las leyendas para filtrar datos</li>
+            <li>Use los filtros disponibles en el panel lateral</li>
+            <li>En dispositivos móviles, gire el dispositivo para una mejor visualización</li>
+          </ul>
+          
+          <h4>Problemas comunes</h4>
+          <p>Si el informe no carga correctamente, intente recargar la página o contacte con soporte técnico.</p>
+        </div>
+        <div class="help-modal-footer">
+          <button class="primary-button">Entendido</button>
+        </div>
+      </div>
+    `;
+    
+    // Añadir el modal al body
+    document.body.appendChild(modal);
+    
+    // Prevenir scroll en el body mientras el modal está abierto
+    document.body.style.overflow = 'hidden';
+    
+    // Mostrar el modal con animación
+    setTimeout(() => {
+      modal.classList.add('active');
+    }, 10);
+    
+    // Cerrar el modal al hacer clic en el botón de cerrar o en el botón primario
+    const closeButton = modal.querySelector('.close-button');
+    const primaryButton = modal.querySelector('.primary-button');
+    
+    function closeModal() {
+      modal.classList.remove('active');
+      setTimeout(() => {
+        document.body.removeChild(modal);
+        document.body.style.overflow = '';
+      }, 300);
+    }
+    
+    closeButton.addEventListener('click', closeModal);
+    primaryButton.addEventListener('click', closeModal);
+    
+    // Cerrar el modal al hacer clic fuera del contenido
+    modal.addEventListener('click', function(event) {
+      if (event.target === modal) {
+        closeModal();
+      }
+    });
+  }
+  
+  // Añadir efecto de desplazamiento suave para el encabezado
+  const logoIcon = document.querySelector('.logo-icon');
+  if (logoIcon) {
+    window.addEventListener('scroll', function() {
+      const scrollPosition = window.scrollY;
+      if (scrollPosition > 0) {
+        logoIcon.style.transform = `translateY(${scrollPosition * 0.2}px) rotate(${scrollPosition * 0.1}deg)`;
+      } else {
+        logoIcon.style.transform = 'translateY(0) rotate(0)';
+      }
     });
   }
 });
