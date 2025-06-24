@@ -1,4 +1,3 @@
-
 /**
  * script.js - Funcionalidades para la visualización de informes Power BI
  * Analysis Center - Optimizado para dispositivos móviles y escritorio
