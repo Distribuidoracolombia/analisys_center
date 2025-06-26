@@ -1,209 +1,161 @@
 /**
  * script.js - Funcionalidades para la visualización de informes Power BI
  * Analysis Center - Optimizado para dispositivos móviles y escritorio
- * Diseño moderno y experiencia de usuario mejorada
+ * 
+ * Organizado en módulos lógicos para mejor mantenimiento
+ * Mejorado el rendimiento y legibilidad
  */
 
-// Esperar a que el DOM esté completamente cargado
 document.addEventListener('DOMContentLoaded', function() {
-  // Referencias a elementos del DOM
-  const reportFrame = document.getElementById('report-frame');
-  const loaderContainer = document.getElementById('loader-container');
-  const container = document.querySelector('.container');
-  const header = document.querySelector('.header');
-  const footer = document.querySelector('.footer');
-  const helpButton = document.getElementById('help-button');
-  
-  // Detectar si es un dispositivo móvil
+  // =============================================
+  // CONSTANTES Y VARIABLES GLOBALES
+  // =============================================
+  const DOM = {
+    reportFrame: document.getElementById('report-frame'),
+    loaderContainer: document.getElementById('loader-container'),
+    container: document.querySelector('.container'),
+    header: document.querySelector('.header'),
+    footer: document.querySelector('.footer'),
+    helpButton: document.getElementById('help-button'),
+    reloadButton: document.getElementById('reload-button'),
+    themeToggleButton: document.getElementById('theme-toggle-button'),
+    logoIcon: document.querySelector('.logo-icon')
+  };
+
   const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-  // Función para recargar solo el iframe
-const reloadButton = document.getElementById('reload-button');
-if (reloadButton && reportFrame) {
-  reloadButton.addEventListener('click', () => {
-    const currentSrc = reportFrame.src;
-    reportFrame.src = currentSrc;
-  });
-}
-
-// Función para cambiar modo claro/oscuro
-const themeToggleButton = document.getElementById('theme-toggle-button');
-if (themeToggleButton) {
-  themeToggleButton.addEventListener('click', () => {
-    document.body.classList.toggle('dark-mode');
-    const icon = themeToggleButton.querySelector('i');
-    icon.classList.toggle('fa-sun');
-    icon.classList.toggle('fa-moon');
-  });
-}
-
-  // Añadir clase al body para identificar el tipo de dispositivo
-  document.body.classList.add(isMobile ? 'mobile-device' : 'desktop-device');
-  
-  // Función para ocultar el loader cuando el iframe ha cargado
-  function hideLoader() {
-    if (loaderContainer) {
-      loaderContainer.style.opacity = '0';
-      setTimeout(() => {
-        loaderContainer.style.display = 'none';
-      }, 500);
-    }
-  }
-  
-  // Evento para detectar cuando el iframe ha cargado
-  if (reportFrame) {
-    reportFrame.addEventListener('load', hideLoader);
-    
-    // Timeout de seguridad (por si el evento load no se dispara)
-    // Tiempo más corto para móviles para mejorar la experiencia
-    setTimeout(hideLoader, isMobile ? 5000 : 8000);
-  }
-  
-  function adjustContainerSize() {
-  const viewportWidth = window.innerWidth;
-  const viewportHeight = window.innerHeight;
-  const isLandscape = viewportWidth > viewportHeight;
-  const isSmallHeight = viewportHeight < 500;
-  const container = document.querySelector('.container');
-  
-  // Valores base de referencia (1920x1080)
-  const baseWidth = 1920;
-  const baseHeight = 1080;
-  
-  // Calcular relación de aspecto
-  const viewportAspect = viewportWidth / viewportHeight;
-  const baseAspect = baseWidth / baseHeight;
-
-  // Para pantallas más pequeñas que el tamaño base
-  if (viewportWidth <= baseWidth || viewportHeight <= baseHeight) {
-    // Escalado que mantiene relación de aspecto
-    const scale = Math.min(viewportWidth / baseWidth, viewportHeight / baseHeight);
-    
-    // Aplicar transformación
-    container.style.transform = `scale(${scale})`;
-    container.style.transformOrigin = 'top left';
-    container.style.width = `${baseWidth}px`;
-    container.style.height = `${baseHeight}px`;
-    
-    // Asegurar que el contenedor no cause overflow
-    document.body.style.overflow = 'hidden';
-  } 
-  // Para pantallas más grandes que el tamaño base
-  else {
-    // Usar porcentajes y viewport units para mejor adaptación
-    container.style.width = '95%';
-    container.style.height = '95vh';
-    container.style.maxWidth = '1800px';
-    container.style.transform = 'none';
-    document.body.style.overflow = '';
-  }
-
-  // Ajustes específicos para móviles (optimizado)
-  if (isMobile) {
-    const shouldHideElements = isLandscape && isSmallHeight;
-    
-    if (header) {
-      header.style.display = shouldHideElements ? 'none' : 'block';
-      // Optimización de rendimiento para transformaciones
-      header.style.willChange = shouldHideElements ? 'transform' : 'auto';
-    }
-    
-    if (footer) {
-      footer.style.display = shouldHideElements ? 'none' : 'block';
-    }
-    
-    // Mejor manejo de eventos táctiles
-    if (shouldHideElements) {
-      document.documentElement.style.touchAction = 'none';
-    } else {
-      document.documentElement.style.touchAction = '';
-    }
-  }
-  
-  // Clases para estilos condicionales
-  document.body.classList.toggle('mobile-device', isMobile);
-  document.body.classList.toggle('landscape', isLandscape);
-  document.body.classList.toggle('small-height', isSmallHeight);
-}
-  
-  // Ajustar tamaño inicial
-  adjustContainerSize();
-  
-  // Optimizar el evento resize con debounce para mejor rendimiento
   let resizeTimer;
-  window.addEventListener('resize', function() {
-    clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(adjustContainerSize, 100);
-  });
+
+  // =============================================
+  // FUNCIONES DE UTILIDAD
+  // =============================================
   
-  // Detectar cambios de orientación específicamente en dispositivos móviles
-  window.addEventListener('orientationchange', function() {
-    // Pequeño retraso para asegurar que las dimensiones se actualicen
-    setTimeout(adjustContainerSize, 200);
-  });
-  
-  // Función para manejar errores de carga del iframe
-  function handleIframeError() {
-    // Si después de 10 segundos el loader sigue visible, asumimos un error
-    setTimeout(() => {
-      if (loaderContainer && loaderContainer.style.display !== 'none') {
-        const errorMessage = document.createElement('div');
-        errorMessage.className = 'error-message';
-        errorMessage.innerHTML = `
-          <h3>Error al cargar el informe</h3>
-          <p>No se pudo cargar el informe de Power BI. Por favor, intente nuevamente más tarde.</p>
-          <p class="warning-text"><strong>Importante:</strong> No borre manualmente la caché o cookies del navegador, ya que esto puede afectar el funcionamiento del informe.</p>
-          <button id="retry-button">Reintentar</button>
-        `;
-        
-        loaderContainer.innerHTML = '';
-        loaderContainer.appendChild(errorMessage);
-        
-        // Botón para reintentar
-        document.getElementById('retry-button').addEventListener('click', function() {
-          location.reload();
-        });
-      }
-    }, isMobile ? 8000 : 10000); // Tiempo más corto para móviles
+  /**
+   * Debounce para optimizar eventos resize
+   * @param {Function} callback - Función a ejecutar
+   * @param {number} delay - Tiempo de espera en ms
+   */
+  function debounce(callback, delay) {
+    return function() {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(callback, delay);
+    };
   }
-  
-  // Iniciar verificación de errores
-  handleIframeError();
-  
-  // Prevenir zoom en dispositivos táctiles para mejor experiencia con el informe
-  if (isMobile) {
-    document.addEventListener('touchmove', function(event) {
-      if (event.scale !== 1) {
-        event.preventDefault();
+
+  // =============================================
+  // FUNCIONES PRINCIPALES
+  // =============================================
+
+  /**
+   * Maneja la carga del iframe y el loader
+   */
+  function initLoader() {
+    function hideLoader() {
+      if (DOM.loaderContainer) {
+        DOM.loaderContainer.style.opacity = '0';
+        setTimeout(() => {
+          DOM.loaderContainer.style.display = 'none';
+        }, 500);
       }
-    }, { passive: false });
+    }
+
+    if (DOM.reportFrame) {
+      DOM.reportFrame.addEventListener('load', hideLoader);
+      setTimeout(hideLoader, isMobile ? 5000 : 8000);
+    }
+  }
+
+  /**
+   * Ajusta el layout según el dispositivo y orientación
+   */
+  function adjustLayout() {
+    const isLandscape = window.innerWidth > window.innerHeight;
+    const isSmallHeight = window.innerHeight < 500;
+
+    // Ajustes del contenedor principal
+    if (isSmallHeight) {
+      DOM.container.style.height = '100vh';
+      DOM.container.style.width = '100%';
+    } else if (isMobile) {
+      DOM.container.style.height = '98vh';
+      DOM.container.style.width = '98%';
+    } else {
+      DOM.container.style.height = '95vh';
+      DOM.container.style.width = '95%';
+    }
+
+    // Ajustes para móviles en horizontal
+    if (isMobile && isLandscape) {
+      if (DOM.header) DOM.header.style.display = isSmallHeight ? 'none' : 'block';
+      if (DOM.footer) DOM.footer.style.display = isSmallHeight ? 'none' : 'block';
+    } else {
+      if (DOM.header) DOM.header.style.display = 'block';
+      if (DOM.footer) DOM.footer.style.display = 'block';
+    }
+
+    // Clases para estilos específicos
+    document.body.classList.toggle('mobile-device', isMobile);
+    document.body.classList.toggle('landscape', isLandscape);
+  }
+
+  /**
+   * Maneja errores de carga del iframe
+   */
+  function initErrorHandling() {
+    setTimeout(() => {
+      if (DOM.loaderContainer && DOM.loaderContainer.style.display !== 'none') {
+        showErrorModal();
+      }
+    }, isMobile ? 8000 : 10000);
+  }
+
+  /**
+   * Muestra modal de error
+   */
+  function showErrorModal() {
+    const errorMessage = document.createElement('div');
+    errorMessage.className = 'error-message';
+    errorMessage.innerHTML = `
+      <h3>Error al cargar el informe</h3>
+      <p>No se pudo cargar el informe de Power BI. Por favor, intente nuevamente más tarde.</p>
+      <p class="warning-text"><strong>Importante:</strong> No borre manualmente la caché o cookies del navegador.</p>
+      <button id="retry-button">Reintentar</button>
+    `;
     
-    // Doble toque para hacer zoom en el informe (solo en el iframe)
+    DOM.loaderContainer.innerHTML = '';
+    DOM.loaderContainer.appendChild(errorMessage);
+    
+    document.getElementById('retry-button').addEventListener('click', () => location.reload());
+  }
+
+  /**
+   * Configura interacciones táctiles para móviles
+   */
+  function initTouchInteractions() {
+    if (!isMobile) return;
+
+    // Prevenir zoom no deseado
+    document.addEventListener('touchmove', (e) => {
+      if (e.scale !== 1) e.preventDefault();
+    }, { passive: false });
+
+    // Manejar doble toque
     let lastTap = 0;
-    reportFrame.addEventListener('touchend', function(event) {
+    DOM.reportFrame.addEventListener('touchend', (e) => {
       const currentTime = new Date().getTime();
       const tapLength = currentTime - lastTap;
       if (tapLength < 500 && tapLength > 0) {
-        // Permitir que el evento de doble toque llegue al iframe
-        event.stopPropagation();
+        e.stopPropagation();
       }
       lastTap = currentTime;
     });
   }
-  
-  // Funcionalidad del botón de ayuda
-  if (helpButton) {
-    helpButton.addEventListener('click', function() {
-      showHelpModal();
-    });
-  }
-  
-  // Función para mostrar el modal de ayuda
+
+  /**
+   * Muestra el modal de ayuda
+   */
   function showHelpModal() {
-    // Crear el modal de ayuda
     const modal = document.createElement('div');
     modal.className = 'help-modal';
-    
-    // Contenido del modal
     modal.innerHTML = `
       <div class="help-modal-content">
         <div class="help-modal-header">
@@ -212,20 +164,16 @@ if (themeToggleButton) {
         </div>
         <div class="help-modal-body">
           <h4>Navegación del informe</h4>
-          <p>Este visor muestra un informe interactivo de Power BI. Puede interactuar con los gráficos y tablas haciendo clic en ellos.</p>
-          
+          <p>Este visor muestra un informe interactivo de Power BI.</p>
           <h4>Consejos de uso</h4>
           <ul>
             <li>Haga clic en las leyendas para filtrar datos</li>
             <li>Use los filtros disponibles en el panel lateral</li>
             <li>En dispositivos móviles, gire el dispositivo para una mejor visualización</li>
           </ul>
-          
           <h4>Problemas comunes</h4>
-          <p>Si el informe no carga correctamente, intente recargar la página o contacte con soporte técnico.</p>
-          
-          <h4>Advertencia importante</h4>
-          <p class="warning-text"><strong>No borre manualmente la caché o cookies del navegador</strong>. Esto puede afectar el funcionamiento correcto del informe y su autenticación. Si experimenta problemas, utilice el botón "Reintentar" o contacte con soporte técnico.</p>
+          <p>Si el informe no carga correctamente, intente recargar la página.</p>
+          <p class="warning-text"><strong>No borre manualmente la caché o cookies del navegador</strong>.</p>
         </div>
         <div class="help-modal-footer">
           <button class="primary-button">Entendido</button>
@@ -233,20 +181,10 @@ if (themeToggleButton) {
       </div>
     `;
     
-    // Añadir el modal al body
     document.body.appendChild(modal);
-    
-    // Prevenir scroll en el body mientras el modal está abierto
     document.body.style.overflow = 'hidden';
     
-    // Mostrar el modal con animación
-    setTimeout(() => {
-      modal.classList.add('active');
-    }, 10);
-    
-    // Cerrar el modal al hacer clic en el botón de cerrar o en el botón primario
-    const closeButton = modal.querySelector('.close-button');
-    const primaryButton = modal.querySelector('.primary-button');
+    setTimeout(() => modal.classList.add('active'), 10);
     
     function closeModal() {
       modal.classList.remove('active');
@@ -256,27 +194,64 @@ if (themeToggleButton) {
       }, 300);
     }
     
-    closeButton.addEventListener('click', closeModal);
-    primaryButton.addEventListener('click', closeModal);
+    // Eventos para cerrar el modal
+    modal.querySelector('.close-button').addEventListener('click', closeModal);
+    modal.querySelector('.primary-button').addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => e.target === modal && closeModal());
+  }
+
+  /**
+   * Configura el efecto de desplazamiento del logo
+   */
+  function initLogoEffect() {
+    if (!DOM.logoIcon) return;
     
-    // Cerrar el modal al hacer clic fuera del contenido
-    modal.addEventListener('click', function(event) {
-      if (event.target === modal) {
-        closeModal();
-      }
-    });
-  }
-  
-  // Añadir efecto de desplazamiento suave para el encabezado
-  const logoIcon = document.querySelector('.logo-icon');
-  if (logoIcon) {
-    window.addEventListener('scroll', function() {
+    window.addEventListener('scroll', () => {
       const scrollPosition = window.scrollY;
-      if (scrollPosition > 0) {
-        logoIcon.style.transform = `translateY(${scrollPosition * 0.2}px) rotate(${scrollPosition * 0.1}deg)`;
-      } else {
-        logoIcon.style.transform = 'translateY(0) rotate(0)';
-      }
+      DOM.logoIcon.style.transform = scrollPosition > 0 
+        ? `translateY(${scrollPosition * 0.2}px) rotate(${scrollPosition * 0.1}deg)`
+        : 'translateY(0) rotate(0)';
     });
   }
+
+  // =============================================
+  // CONFIGURACIÓN DE EVENTOS
+  // =============================================
+
+  // Botón de recarga
+  if (DOM.reloadButton && DOM.reportFrame) {
+    DOM.reloadButton.addEventListener('click', () => {
+      DOM.reportFrame.src = DOM.reportFrame.src;
+    });
+  }
+
+  // Botón de tema oscuro/claro
+  if (DOM.themeToggleButton) {
+    DOM.themeToggleButton.addEventListener('click', () => {
+      document.body.classList.toggle('dark-mode');
+      const icon = DOM.themeToggleButton.querySelector('i');
+      icon.classList.toggle('fa-sun');
+      icon.classList.toggle('fa-moon');
+    });
+  }
+
+  // Botón de ayuda
+  if (DOM.helpButton) {
+    DOM.helpButton.addEventListener('click', showHelpModal);
+  }
+
+  // Eventos de ventana
+  window.addEventListener('resize', debounce(adjustLayout, 100));
+  window.addEventListener('orientationchange', () => setTimeout(adjustLayout, 200));
+
+  // =============================================
+  // INICIALIZACIÓN
+  // =============================================
+  document.body.classList.add(isMobile ? 'mobile-device' : 'desktop-device');
+  
+  initLoader();
+  adjustLayout();
+  initErrorHandling();
+  initTouchInteractions();
+  initLogoEffect();
 });
