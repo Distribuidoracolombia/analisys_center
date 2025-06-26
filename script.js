@@ -58,36 +58,72 @@ if (themeToggleButton) {
     setTimeout(hideLoader, isMobile ? 5000 : 8000);
   }
   
-  // Función para ajustar el tamaño del contenedor según el dispositivo y orientación
   function adjustContainerSize() {
-    const isLandscape = window.innerWidth > window.innerHeight;
-    const isSmallHeight = window.innerHeight < 500;
+  const viewportWidth = window.innerWidth;
+  const viewportHeight = window.innerHeight;
+  const isLandscape = viewportWidth > viewportHeight;
+  const isSmallHeight = viewportHeight < 500;
+  const container = document.querySelector('.container');
+  
+  // Valores base de referencia (1920x1080)
+  const baseWidth = 1920;
+  const baseHeight = 1080;
+  
+  // Calcular relación de aspecto
+  const viewportAspect = viewportWidth / viewportHeight;
+  const baseAspect = baseWidth / baseHeight;
+
+  // Para pantallas más pequeñas que el tamaño base
+  if (viewportWidth <= baseWidth || viewportHeight <= baseHeight) {
+    // Escalado que mantiene relación de aspecto
+    const scale = Math.min(viewportWidth / baseWidth, viewportHeight / baseHeight);
     
-    // Ajustar contenedor principal
-    if (isSmallHeight) {
-      container.style.height = '100vh';
-      container.style.width = '100%';
-    } else if (isMobile) {
-      container.style.height = '98vh';
-      container.style.width = '98%';
-    } else {
-      container.style.height = '95vh';
-      container.style.width = '95%';
-    }
+    // Aplicar transformación
+    container.style.transform = `scale(${scale})`;
+    container.style.transformOrigin = 'top left';
+    container.style.width = `${baseWidth}px`;
+    container.style.height = `${baseHeight}px`;
     
-    // Ajustes específicos para modo paisaje en móviles
-    if (isMobile && isLandscape) {
-      if (header) header.style.display = isSmallHeight ? 'none' : 'block';
-      if (footer) footer.style.display = isSmallHeight ? 'none' : 'block';
-    } else {
-      if (header) header.style.display = 'block';
-      if (footer) footer.style.display = 'block';
-    }
-    
-    // Aplicar clase específica para móviles
-    document.body.classList.toggle('mobile-device', isMobile);
-    document.body.classList.toggle('landscape', isLandscape);
+    // Asegurar que el contenedor no cause overflow
+    document.body.style.overflow = 'hidden';
+  } 
+  // Para pantallas más grandes que el tamaño base
+  else {
+    // Usar porcentajes y viewport units para mejor adaptación
+    container.style.width = '95%';
+    container.style.height = '95vh';
+    container.style.maxWidth = '1800px';
+    container.style.transform = 'none';
+    document.body.style.overflow = '';
   }
+
+  // Ajustes específicos para móviles (optimizado)
+  if (isMobile) {
+    const shouldHideElements = isLandscape && isSmallHeight;
+    
+    if (header) {
+      header.style.display = shouldHideElements ? 'none' : 'block';
+      // Optimización de rendimiento para transformaciones
+      header.style.willChange = shouldHideElements ? 'transform' : 'auto';
+    }
+    
+    if (footer) {
+      footer.style.display = shouldHideElements ? 'none' : 'block';
+    }
+    
+    // Mejor manejo de eventos táctiles
+    if (shouldHideElements) {
+      document.documentElement.style.touchAction = 'none';
+    } else {
+      document.documentElement.style.touchAction = '';
+    }
+  }
+  
+  // Clases para estilos condicionales
+  document.body.classList.toggle('mobile-device', isMobile);
+  document.body.classList.toggle('landscape', isLandscape);
+  document.body.classList.toggle('small-height', isSmallHeight);
+}
   
   // Ajustar tamaño inicial
   adjustContainerSize();
